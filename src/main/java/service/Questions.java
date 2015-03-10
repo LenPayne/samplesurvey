@@ -28,12 +28,13 @@ public class Questions {
     
     @POST
     @Consumes("application/json")
+    @Produces("application/json")
     public Response add(JsonObject json) {
         String question = json.getString("question");
         int result = Database.doUpdate("INSERT INTO questions (question) VALUES (?)", question);
         if (result <= 0)
             return Response.status(500).build();
         else
-            return Response.ok().build();
+            return Response.ok(json).build();
     }
 }
