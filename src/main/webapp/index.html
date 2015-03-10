@@ -7,9 +7,26 @@
         <script src="http://code.jquery.com/jquery.min.js"></script>
         <script>
             $(document).ready(function() {
-                $.getJSON('./q/question', function(data) {
-                    for (var i = 0; i < data.length; i++)
-                        $('#question').html(data[i].question)
+                var getQuestions = function() {
+                    $('#question').html('');
+                    $.getJSON('./q/question', function(data) {
+                        for (var i = 0; i < data.length; i++)
+                            $('#question').append(data[i].question);
+                    });
+                };
+                getQuestions();
+
+                $('#sendQuestion').click(function() {
+                    $.ajax({
+                        url: './q/question',
+                        dataType: 'json',
+                        method: 'post',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            "question": $('#newQuestion').val()
+                        }),
+                        success: getQuestions
+                    });
                 });
             });
         </script>
@@ -17,5 +34,7 @@
     <body>
         <h1>Hello Tuesday</h1>
         <div id="question"></div>
+        <div><p>Question</p><textarea id="newQuestion"></textarea>
+            <p><button id="sendQuestion">Add Question</button></div>
     </body>
 </html>
